@@ -98,7 +98,7 @@ def build_planner_components(env_name, config):
 	# config['env_name'] = env_name
 	# bc_actor = behavior_cloning(sequence, config=config)
 	# torch.save(bc_actor, f"models/{env_name}/bc_actor-seed{config['seed']}.pth")
-	# bc_actor = torch.load(f"models/{env_name}/bc-full-seed{config['seed']}-steps500000.pth")
+	# bc_actor = torch.load(f"models/{env_name}/bc-full-seed{config['seed']}.pth")
 	# score = evaluate_bc(config['env'], bc_actor, n_episode=100)
 	# return score
 	
@@ -106,20 +106,20 @@ def build_planner_components(env_name, config):
 		## learning goal-conditioned supervised learning actor
 		print('learning goal-conditioned supervised learning actor...')
 		gcsl_actor = learn_gcsl_actor(sequence, config=config)
-		torch.save(gcsl_actor, f"pretrained_models/{env_name}/gc_actor-horizon{config['gcsl_net_horizon']}-seed{config['seed']}-steps500000.pth")
+		torch.save(gcsl_actor, f"models/{env_name}/gc_actor-horizon{config['gcsl_net_horizon']}-seed{config['seed']}.pth")
 	
 	if not config['load_model']:
 		# learning reachability_net
 		print('learning reachability_net...')
 		reachability = learn_reachability(sequence, config=config)
-		torch.save(reachability, f"pretrained_models/{env_name}/reachability_net-horizon{config['reachability_net_horizon']}-seed{config['seed']}-steps500000.pth")
+		torch.save(reachability, f"models/{env_name}/reachability_net-horizon{config['reachability_net_horizon']}-seed{config['seed']}.pth")
 
 	sequence, states, goal, _, states_end_idx = get_datasets_state_bc(env_name, config, evaluation_flag=True)
 	sequence_mean_score = np.mean([seq['rewards'].sum() for seq in sequence])
 	sequence_normalized_score = d4rl.get_normalized_score(env_name, sequence_mean_score)
 	print(f'sequence_normalized_score: {sequence_normalized_score}')
  
-	# '''synthesing expert trajectories'''
+	# '''synthesizing expert trajectories'''
 	# composite_demos = get_composite_demonstrations(states, goal, config, n_demos=1)
 	# best_seq_len = [len(seq) for seq in composite_demos]
 	# states_end_idx = np.cumsum(best_seq_len, axis=-1)
@@ -128,7 +128,7 @@ def build_planner_components(env_name, config):
 	# plt.scatter(composite_demos[0][:, 0], composite_demos[0][:, 1]), plt.show()
  
  
-	gcsl_actor = torch.load(f"pretrained_models/{env_name}/actor-max-horizon{config['gcsl_net_horizon']}-seed{config['seed']}-steps500000.pth")
+	gcsl_actor = torch.load(f"models/{env_name}/gc_actor-horizon{config['gcsl_net_horizon']}-seed{config['seed']}.pth")
 	gcsl_actor.prev_evaluate_state = None
 	reachable_func = torch.load(f"models/{env_name}/reachability_net-horizon{config['reachability_net_horizon']}-seed{config['seed']}.pth")
 	# reachable_func = distance_reachable_func
