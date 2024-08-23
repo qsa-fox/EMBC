@@ -1,0 +1,18 @@
+{
+    "device": "cuda",
+    "n_expert_demos": 20,
+    
+    "reachability_net_weight_decay": 1e-4,
+    "reachability_net_lr": 1e-3,
+    "reachability_net_train_steps": 5e5,
+    "reachability_net_horizon": 5,
+    "reachability_net_batch_size": 256,
+    
+    "gcsl_net_weight_decay": 1e-4,
+    "gcsl_net_lr": 1e-3,
+    "gcsl_net_train_steps": 5e5,
+    "gcsl_net_horizon": 10,
+    "gcsl_net_batch_size": 256,
+    "gcsl_evaluation_deterministic": 1,
+    "gcsl_net_lr_schedule": 1
+}
